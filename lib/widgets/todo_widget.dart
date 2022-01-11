@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/model/todo.dart';
+import 'package:todo_app/pages/edit_todo_page.dart';
 import 'package:todo_app/provider/todos.dart';
 import 'package:todo_app/utils.dart';
 
@@ -13,13 +14,13 @@ class TodoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ClipRRect(
-    borderRadius: BorderRadius.circular(16),
-    child: Slidable(
+        borderRadius: BorderRadius.circular(16),
+        child: Slidable(
           startActionPane: ActionPane(
             motion: ScrollMotion(),
             children: [
               SlidableAction(
-                onPressed: (context) {},
+                onPressed: (context) => editTodo(context, todo),
                 backgroundColor: Colors.green,
                 icon: Icons.edit,
                 label: 'Edit',
@@ -40,7 +41,7 @@ class TodoWidget extends StatelessWidget {
           key: Key(todo.id),
           child: buildTodo(context),
         ),
-  );
+      );
 
   Widget buildTodo(BuildContext context) => Container(
         color: Colors.white,
@@ -52,11 +53,11 @@ class TodoWidget extends StatelessWidget {
               checkColor: Colors.white,
               value: todo.isDone,
               onChanged: (_) {
-                  final provider = Provider.of<TodosProvider>(context, listen: false);
-                  final isDone = provider.toggleTodoStatus(todo);
-                  Utils.showSnackBar(
-                    context,
-                   isDone?  'Task Done': 'Task marked icomplete');
+                final provider =
+                    Provider.of<TodosProvider>(context, listen: false);
+                final isDone = provider.toggleTodoStatus(todo);
+                Utils.showSnackBar(
+                    context, isDone ? 'Task Done' : 'Task marked Incomplete');
               },
             ),
             Expanded(
@@ -88,7 +89,12 @@ class TodoWidget extends StatelessWidget {
 
   deleteTodo(BuildContext context, Todo todo) {
     final provider = Provider.of<TodosProvider>(context, listen: false);
-      provider.removeTodo(todo);
-      Utils.showSnackBar(context, 'Deleted the task');
+    provider.removeTodo(todo);
+    Utils.showSnackBar(context, 'Deleted the task');
   }
+
+  editTodo(BuildContext context, Todo todo) =>
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditTodoPage(todo: todo),
+      ));
 }
