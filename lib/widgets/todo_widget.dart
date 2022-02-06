@@ -43,49 +43,54 @@ class TodoWidget extends StatelessWidget {
         ),
       );
 
-  Widget buildTodo(BuildContext context) => Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Checkbox(
-              activeColor: Theme.of(context).primaryColor,
-              checkColor: Colors.white,
-              value: todo.isDone,
-              onChanged: (_) {
-                final provider =
-                    Provider.of<TodosProvider>(context, listen: false);
-                final isDone = provider.toggleTodoStatus(todo);
-                Utils.showSnackBar(
-                    context, isDone ? 'Task Done' : 'Task marked Incomplete');
-              },
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    todo.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 22,
-                    ),
-                  ),
-                  if (todo.description.isNotEmpty)
-                    Container(
-                      margin: EdgeInsets.only(top: 4),
-                      child: Text(
-                        todo.description,
-                        style: TextStyle(fontSize: 20, height: 1.5),
-                      ),
-                    )
-                ],
+  Widget buildTodo(BuildContext context) => GestureDetector(
+    onTap: (){
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditTodoPage(todo: todo)));
+    },
+    child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Checkbox(
+                activeColor: Theme.of(context).primaryColor,
+                checkColor: Colors.white,
+                value: todo.isDone,
+                onChanged: (_) {
+                  final provider =
+                      Provider.of<TodosProvider>(context, listen: false);
+                  final isDone = provider.toggleTodoStatus(todo);
+                  Utils.showSnackBar(
+                      context, isDone ? 'Task Done' : 'Task marked Incomplete');
+                },
               ),
-            )
-          ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      todo.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 22,
+                      ),
+                    ),
+                    if (todo.description.isNotEmpty)
+                      Container(
+                        margin: EdgeInsets.only(top: 4),
+                        child: Text(
+                          todo.description,
+                          style: TextStyle(fontSize: 20, height: 1.5),
+                        ),
+                      )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      );
+  );
 
   deleteTodo(BuildContext context, Todo todo) {
     final provider = Provider.of<TodosProvider>(context, listen: false);

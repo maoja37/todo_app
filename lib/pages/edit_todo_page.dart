@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/model/todo.dart';
@@ -29,6 +32,11 @@ class _EditTodoPageState extends State<EditTodoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Todo'),
+        actions: [IconButton(onPressed: () {
+          final provider = Provider.of<TodosProvider>(context, listen: false);
+          provider.removeTodo(widget.todo);
+          Navigator.of(context).pop();
+        }, icon: Icon(CupertinoIcons.delete))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,9 +60,9 @@ class _EditTodoPageState extends State<EditTodoPage> {
 
   void saveTodo() {
     final isValid = _formKey.currentState!.validate();
-    if(!isValid){
-      return ;
-    }else {
+    if (!isValid) {
+      return;
+    } else {
       final provider = Provider.of<TodosProvider>(context, listen: false);
       provider.updateTodo(widget.todo, title, description);
       Navigator.of(context).pop();
